@@ -9,7 +9,7 @@ function install {
 # Mongo installation 
 echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
 sudo apt-get update
-install mongodb-org=3.0.12 mongodb-org-server=3.0.12 mongodb-org-shell=3.0.12 mongodb-org-mongos=3.0.12 mongodb-org-tools=3.0.12
+sudo apt-get install -y --force-yes mongodb-org=3.0.12 mongodb-org-server=3.0.12 mongodb-org-shell=3.0.12 mongodb-org-mongos=3.0.12 mongodb-org-tools=3.0.12
 
 echo "mongodb-org hold" | sudo dpkg --set-selections
 echo "mongodb-org-server hold" | sudo dpkg --set-selections
@@ -61,23 +61,24 @@ install 'Blade dependencies' libncurses5-dev
 # install 'ExecJS runtime' nodejs
 
 # rvm and ruby
-export RUBY_VERSION="1.9.2"
+export RUBY_VERSION="1.9.3"
 if ! type rvm >/dev/null 2>&1; then
   su - vagrant -c 'curl -sSL https://rvm.io/mpapis.asc | gpg --import -'
   su - vagrant -c 'curl -L https://get.rvm.io | bash -s stable'
-  su - vagrant -c 'source /etc/profile.d/rvm.sh'
+  su - vagrant -c 'source $HOME/.rvm/scripts/rvm'
 fi
 if ! rvm list rubies ruby | grep ruby-${RUBY_VERSION}; then
   su - vagrant -c 'rvm install ${RUBY_VERSION}'
 fi
 su - vagrant -c 'rvm --default use ${RUBY_VERSION}'
 su - vagrant -c 'rvm all do gem install middleman'
+su - vagrant -c 'rvm all do gem install bundler'
 
 
 # node
 su - vagrant -c 'curl https://raw.githubusercontent.com/creationix/nvm/v0.14.0/install.sh | sh'
-su - vagrant -c 'nvm install node'
-su - vagrant -c 'nvm alias default node'
+su - vagrant -c 'nvm install v6.2.2'
+su - vagrant -c 'nvm alias default v6.2.2'
 
 # Needed for docs generation.
 update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
