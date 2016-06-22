@@ -6,30 +6,37 @@ function install {
     apt-get -y install "$@" >/dev/null 2>&1
 }
 
-echo adding swap file
-fallocate -l 2G /swapfile
-chmod 600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-echo '/swapfile none swap defaults 0 0' >> /etc/fstab
+# Mongo installation 
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+sudo apt-get update
+install mongodb-org=3.0.12 mongodb-org-server=3.0.12 mongodb-org-shell=3.0.12 mongodb-org-mongos=3.0.12 mongodb-org-tools=3.0.12
 
-echo updating package information
-apt-add-repository -y ppa:brightbox/ruby-ng >/dev/null 2>&1
-apt-get -y update >/dev/null 2>&1
+echo "mongodb-org hold" | sudo dpkg --set-selections
+echo "mongodb-org-server hold" | sudo dpkg --set-selections
+echo "mongodb-org-shell hold" | sudo dpkg --set-selections
+echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
+echo "mongodb-org-tools hold" | sudo dpkg --set-selections
+
+sudo service mongod start
+# end Mongo
+
 
 install 'development tools' build-essential
 
-install Ruby ruby2.3 ruby2.3-dev
-update-alternatives --set ruby /usr/bin/ruby2.3 >/dev/null 2>&1
-update-alternatives --set gem /usr/bin/gem2.3 >/dev/null 2>&1
+# install Ruby ruby2.3 ruby2.3-dev
+# update-alternatives --set ruby /usr/bin/ruby2.3 >/dev/null 2>&1
+# update-alternatives --set gem /usr/bin/gem2.3 >/dev/null 2>&1
 
-echo installing Bundler
-gem install bundler -N >/dev/null 2>&1
+# echo installing Bundler
+# gem install bundler -N >/dev/null 2>&1
 
 install Git git
+install	Curl curl
+install libssl libssl-dev
 install SQLite sqlite3 libsqlite3-dev
 install memcached memcached
 install Redis redis-server
+
 install RabbitMQ rabbitmq-server
 
 install PostgreSQL postgresql postgresql-contrib libpq-dev
@@ -51,7 +58,16 @@ SQL
 
 install 'Nokogiri dependencies' libxml2 libxml2-dev libxslt1-dev
 install 'Blade dependencies' libncurses5-dev
-install 'ExecJS runtime' nodejs
+# install 'ExecJS runtime' nodejs
+
+# rvm and ruby
+su - vagrant -c 'curl -sSL https://get.rvm.io | bash -s stable --ruby'
+su - vagrant -c 'rvm rvmrc warning ignore allGemfiles'
+
+# node
+su - vagrant -c 'curl https://raw.githubusercontent.com/creationix/nvm/v0.14.0/install.sh | sh'
+su - vagrant -c 'nvm install node'
+su - vagrant -c 'nvm alias default node'
 
 # Needed for docs generation.
 update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
