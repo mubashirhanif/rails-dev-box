@@ -63,21 +63,21 @@ install 'Blade dependencies' libncurses5-dev
 # rvm and ruby
 export RUBY_VERSION="1.9.2"
 if ! type rvm >/dev/null 2>&1; then
-  curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-  curl -L https://get.rvm.io | bash -s stable
-  source /etc/profile.d/rvm.sh
+  su - vagrant -c 'curl -sSL https://rvm.io/mpapis.asc | gpg --import -'
+  su - vagrant -c 'curl -L https://get.rvm.io | bash -s stable'
+  su - vagrant -c 'source /etc/profile.d/rvm.sh'
 fi
 if ! rvm list rubies ruby | grep ruby-${RUBY_VERSION}; then
-  rvm install ${RUBY_VERSION}
+  su - vagrant -c 'rvm install ${RUBY_VERSION}'
 fi
-rvm --default use ${RUBY_VERSION}
-rvm all do gem install middleman
+su - vagrant -c 'rvm --default use ${RUBY_VERSION}'
+su - vagrant -c 'rvm all do gem install middleman'
 
 
 # node
-curl https://raw.githubusercontent.com/creationix/nvm/v0.14.0/install.sh | sh
-nvm install node
-nvm alias default node
+su - vagrant -c 'curl https://raw.githubusercontent.com/creationix/nvm/v0.14.0/install.sh | sh'
+su - vagrant -c 'nvm install node'
+su - vagrant -c 'nvm alias default node'
 
 # Needed for docs generation.
 update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
