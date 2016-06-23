@@ -77,6 +77,7 @@ su - vagrant -c 'rvm all do gem install bundler'
 
 # node
 su - vagrant -c 'curl https://raw.githubusercontent.com/creationix/nvm/v0.14.0/install.sh | sh'
+su - vagrant -c 'echo "export NVM_NODEJS_ORG_MIRROR=https://nodejs.org/dist" >> $HOME/.bash_profile'
 su - vagrant -c 'nvm install v6.2.2'
 su - vagrant -c 'nvm alias default v6.2.2'
 
