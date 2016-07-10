@@ -36,8 +36,13 @@ install libssl libssl-dev
 install SQLite sqlite3 libsqlite3-dev
 install memcached memcached
 install Redis redis-server
-
+install Java openjdk-7-jre
 install RabbitMQ rabbitmq-server
+
+# install and config elasticsearch
+wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.3.4/elasticsearch-2.3.4.deb
+sudo dpkg -i elasticsearch-2.3.4.deb
+update-rc.d elasticsearch defaults
 
 install PostgreSQL postgresql postgresql-contrib libpq-dev
 sudo -u postgres createuser --superuser vagrant
